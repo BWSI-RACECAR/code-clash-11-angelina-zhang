@@ -64,19 +64,31 @@ class Solution:
 
         # return diff+diff_2
 
-        min_price_1 = 1000000
-        profit_i =[]
-        max_profit_1 = 0
-        for x in prices:
-            if min_price_1>x:
+        min_price_1 = 100000 # Set min price to max range for prices: 10^5, adjustible
+        profit_1 = []  # Set up profit margin in the first window
+        max_profit_1 = 0 # Current max profit is 0
+
+        # Traverse through prices in the forward direction to find profits using x as pointer
+        for x in prices: # x represents time (hours in a day)
+            if min_price_1 > x:
+                # If x is less than the previous min, assign a new minimum to current value x
                 min_price_1 = x
             else:
+                # Otherwise, if x is not a new minimum, adjust the maximum profit variable
+                # The max profit variable ONLY CHANGES when the current profit: x - minimum price
+                # is greater than the previous profit.
                 max_profit_1 = max(max_profit_1, x - min_price_1)
-            profit_i.append(max_profit_1)
-        max_price_2 =  0 
-        profit_2 =[]
-        max_profit_2 = 0
-        # price_flip= prices[::-1]
+
+            # Append the profit found to the first list. At the end of the algorithm, the profit_1 list will
+            # contain the maximum profits found through all hours of the day (all items in the prices list) 
+            profit_1.append(max_profit_1)
+
+        # TODO: Analyze second window (backwards profit)
+        max_price_2 = 0 # Set max price to min range for prices: 0, adjustible
+        profit_2 = [0]*len(prices) # Set up profit margin in the second window, moving backwards cannot use append
+        max_profit_2 = 0 # Current max profit is 0
+
+        # Traverse through prices in the backwards direction
         for i in range(len(prices) - 1, -1, -1): # Iterate over len(prices) -> 0 inclusive, decrement by 1
             x = prices[i] # Set a seperate variable "x" equal to the contents of prices, counting backwards
             if x > max_price_2: 
@@ -97,14 +109,15 @@ class Solution:
         max_profit = 0 # Default variable
         for i in range(len(prices)): # Iterate across all items in the list
             # Maximum profit at given time is equivalent to the maximum profit calculated from each window summed together
-            sum_profit = profit_i[i] + profit_2[i]
+            sum_profit = profit_1[i] + profit_2[i]
             if sum_profit > max_profit: # If the current sum is greater than the maximum profit, assign max profit to the current sum
                 max_profit = sum_profit
         
-        # print(profit_i)
-        # print(profit_2)
+       
 
         return max_profit # Return solution
+
+
 
 def main():
     array = input().split(" ")
