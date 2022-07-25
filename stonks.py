@@ -42,25 +42,69 @@ class Solution:
         # return type: int
 
         # TODO: Write code below to return a1 n int with the solution to the prompt
-        min = prices[0]
-        max = prices[len(prices)-1]
-        diff = 0
-        for i in range(0, len(prices)-1):
-            for j in range(i, len(prices)):
 
-                if prices[j]-prices[i]>diff:
-                    diff = prices[j]-prices[i]
-        diff_2 = 0
-        for i in range(0, len(prices)-1):
-            if prices[i] != min:
-                for j in range(i, len(prices)):
+        # min = prices[0]
+        # numb = 0
+        # max_1 = prices[len(prices)-2]
+        # max_2 =  prices[len(prices)-1]
+        # diff = 0
+        # for i in range(0, len(prices)-1):
+        #     for j in range(i, len(prices)):
 
-                    if prices[j]-prices[i]>diff:
-                        diff_2 = prices[j]-prices[i]
+        #         if prices[j]-prices[i]>diff:
+        #             diff = prices[j]-prices[i]
+        #             numb = j
+        # diff_2 = 0
+        # # min_2 = prices[0]
+        # for i in range(numb, len(prices)-1):
+        #     if prices[i] != min:
+        #         for j in range(i, len(prices)):
+        #             if prices[j]-prices[i]>diff_2:
+        #                 diff_2 = prices[j]-prices[i]
 
+        # return diff+diff_2
 
-        return diff+diff_2
-                    
+        min_price_1 = 1000000
+        profit_i =[]
+        max_profit_1 = 0
+        for x in prices:
+            if min_price_1>x:
+                min_price_1 = x
+            else:
+                max_profit_1 = max(max_profit_1, x - min_price_1)
+            profit_i.append(max_profit_1)
+        max_price_2 =  0 
+        profit_2 =[]
+        max_profit_2 = 0
+        # price_flip= prices[::-1]
+        for i in range(len(prices) - 1, -1, -1): # Iterate over len(prices) -> 0 inclusive, decrement by 1
+            x = prices[i] # Set a seperate variable "x" equal to the contents of prices, counting backwards
+            if x > max_price_2: 
+                # If the current pointer x is greater than maximum price, set max price equal to current pointer x
+                max_price_2 =  x
+            else:
+                # If the current pointer x is less than maximum price, then there is an opportunity to make profit.
+                # Calcaulte the profit at the current location by subtracting x by max_price_2. (x is smaller!)
+                # If the profit calculated is greater than the maximum profit, assign the new value to max_profit,
+                # Otherwise, the maximum profit stays the same.
+                max_profit_2 = max(max_profit_2, max_price_2 - x)
+
+            # (Similar to append but backwards) Insert the maximum profit available at this hour into the profit_2
+            # list (second window) and repeat for all items in the list
+            profit_2[i] = max_profit_2
+
+        # TODO: Calculate max profit from the two windows
+        max_profit = 0 # Default variable
+        for i in range(len(prices)): # Iterate across all items in the list
+            # Maximum profit at given time is equivalent to the maximum profit calculated from each window summed together
+            sum_profit = profit_i[i] + profit_2[i]
+            if sum_profit > max_profit: # If the current sum is greater than the maximum profit, assign max profit to the current sum
+                max_profit = sum_profit
+        
+        # print(profit_i)
+        # print(profit_2)
+
+        return max_profit # Return solution
 
 def main():
     array = input().split(" ")
